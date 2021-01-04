@@ -35,8 +35,10 @@ public class MainActivity extends AppCompatActivity {
     //keeping track of operations and number system
     boolean calculation = false;
     boolean readyToCalculate = false;
+    boolean calculationDone = false;
     boolean romanButtonsOn = false;
     boolean decimalDisplay = true;
+    boolean operationSelected = false;
 
     //display and data storage
     TextView display;
@@ -77,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
             romanButtonValues.put(id, romanValues[i]);
         }
 
-
+        //create roman object for conversions and calculations
         roman = new Roman();
 
     }
@@ -96,6 +98,16 @@ public class MainActivity extends AppCompatActivity {
                 numberEntered = "";
                 calculation = false;
                 readyToCalculate = true;
+            }
+
+            if (calculationDone) {
+                if (!operationSelected) {
+                    secondNumberEntered = numberEntered;
+                }
+                numberEntered = "";
+                display.setText("");
+                calculationDone = false;
+
             }
 
             Button curButton = (Button) view;
@@ -140,19 +152,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void operationClick (View view) {
-        if (!calculation && !readyToCalculate) {
-            operation = (String) view.getTag();
-            calculation = true;
-        } else {
-            Toast.makeText(getApplicationContext(), "One operation at a time", Toast.LENGTH_SHORT).show();
+        String message =  "Convert back to do operations";
+        if (decimalDisplay != romanButtonsOn) {
+            if (!calculation && !readyToCalculate ||calculationDone) {
+                operation = (String) view.getTag();
+                calculation = true;
+                operationSelected = true;
+                return;
+            } else {
+                message = "One operation at a time";
+            }
         }
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     public void calculationClick (View view) {
         if (readyToCalculate) {
             double answer;
-            double firstNumber = 0;
-            double secondNumber = 0;
+            double firstNumber;
+            double secondNumber;
+
 
             if (romanButtonsOn) {
                 firstNumber = roman.convertToInt(secondNumberEntered);
@@ -182,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
             display.setText(numberEntered);
 
             readyToCalculate = false;
+            calculationDone = true;
             operation = "";
             secondNumberEntered = "";
         }
@@ -190,12 +210,13 @@ public class MainActivity extends AppCompatActivity {
     public void convertValueClick (View view) {
         if (!calculation || !readyToCalculate) {
             if (decimalDisplay) {
-                String romanValue = roman.convertToString(Integer.parseInt(numberEntered));
-                display.setText(romanValue);
+                double value = Double.parseDouble(numberEntered);
+                numberEntered = roman.convertToString((int) value);
+                display.setText(numberEntered);
                 decimalDisplay = false;
             } else {
-                String decimalValue = String.valueOf(roman.convertToInt(numberEntered));
-                display.setText(decimalValue);
+                numberEntered = String.valueOf(roman.convertToInt(numberEntered));
+                display.setText(numberEntered);
                 decimalDisplay = true;
             }
         }
