@@ -60,7 +60,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#FFFFFF"
         android:textSize="44sp"
-        app:layout_constraintStart_toEndOf="@+id/buttonPeriod"
+        app:layout_constraintStart_toEndOf="@+id/buttonHelp"
         app:layout_constraintTop_toBottomOf="@+id/button2" />
 
     <Button
@@ -243,7 +243,7 @@
         android:textColor="#FFFFFF"
         android:textSize="44sp"
         android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@+id/buttonPeriod"
+        app:layout_constraintStart_toEndOf="@+id/buttonHelp"
         app:layout_constraintTop_toBottomOf="@+id/roman2" />
 
     <Button
@@ -513,6 +513,7 @@
         app:layout_constraintStart_toEndOf="@+id/roman3"
         app:layout_constraintTop_toBottomOf="@+id/buttonMultiply" />
 
+
     <Button
         android:id="@+id/buttonEquals"
         style="@style/Widget.AppCompat.Button.Borderless"
@@ -530,7 +531,6 @@
         android:textSize="54sp"
         app:layout_constraintStart_toEndOf="@+id/roman0"
         app:layout_constraintTop_toBottomOf="@+id/roman3" />
-
 
     <Button
         android:id="@+id/buttonMultiply"
@@ -555,7 +555,7 @@
         app:layout_constraintTop_toBottomOf="@+id/buttonDivide" />
 
     <Button
-        android:id="@+id/buttonPeriod"
+        android:id="@+id/buttonHelp"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="77dp"
         android:layout_height="74dp"
@@ -564,7 +564,7 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/rounded_button"
         android:fontFamily="sans-serif-light"
-        android:text="."
+        android:text="?"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#FFFFFF"
         android:textSize="44sp"
