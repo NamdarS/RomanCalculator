@@ -116,7 +116,10 @@ public class MainActivity extends AppCompatActivity {
                 numberEntered = "";
                 display.setText("");
                 calculationDone = false;
+            }
 
+            if (operation.equals("")) {
+                answerDisplay.setText("");
             }
 
             Button curButton = (Button) view;
@@ -147,6 +150,19 @@ public class MainActivity extends AppCompatActivity {
                 numberEntered = "";
                 calculation = false;
                 readyToCalculate = true;
+            }
+
+            if (calculationDone) {
+                if (!operationSelected) {
+                    secondNumberEntered = numberEntered;
+                }
+                numberEntered = "";
+                display.setText("");
+                calculationDone = false;
+            }
+
+            if (operation.equals("")) {
+                answerDisplay.setText("");
             }
 
             Button curButton = (Button) view;
@@ -183,6 +199,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void calculationClick (View view) {
         view.performHapticFeedback(1);
+
+        boolean reset = false;
         if (readyToCalculate) {
             double answer;
             double firstNumber;
@@ -192,13 +210,17 @@ public class MainActivity extends AppCompatActivity {
             if (romanButtonsOn) {
                 firstNumber = roman.convertToInt(secondNumberEntered);
                 secondNumber = roman.convertToInt(numberEntered);
+                if (firstNumber == 0 || secondNumber == 0) {
+                    String message = "Invalid Roman numeral entered";
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                    reset = true;
+                }
             } else {
                 firstNumber = Double.parseDouble(secondNumberEntered);
                 secondNumber = Double.parseDouble(numberEntered);
             }
 
             if (operation.equals("add")) {
-
                 answer = firstNumber + secondNumber;
             } else if (operation.equals("subtract")) {
                 answer = firstNumber - secondNumber;
@@ -212,7 +234,13 @@ public class MainActivity extends AppCompatActivity {
             numberEntered = String.valueOf(answer);
 
             if (romanButtonsOn) {
-                numberEntered = roman.convertToString((int) answer);
+                if (answer < 1) {
+                    String message = "Roman numerals can't be negative or decimals";
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                    reset = true;
+                } else {
+                    numberEntered = roman.convertToString((int) answer);
+                }
             }
 
             readyToCalculate = false;
@@ -220,13 +248,15 @@ public class MainActivity extends AppCompatActivity {
             operation = "";
             secondNumberEntered = "";
 
-            if (checkLimit()) {
-                String message = "Too big to calculate";
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            if (checkLimit() || reset) {
                 display.setText("");
                 answerDisplay.setText("");
                 numberEntered = "";
                 calculationDone = false;
+                if (!reset) {
+                    String message = "Too big to compute";
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                }
                 return;
             }
 
@@ -241,23 +271,37 @@ public class MainActivity extends AppCompatActivity {
             if (numberEntered.length() > 0) {
                 if (decimalDisplay) {
                     double value = Double.parseDouble(numberEntered);
-                    numberEntered = roman.convertToString((int) value);
-                    display.setText(numberEntered);
-                    decimalDisplay = false;
+                    if (value < 0) {
+                        String message = "Roman numerals can't be negative";
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                    } else {
+                        numberEntered = roman.convertToString((int) value);
+                        display.setText(numberEntered);
+                        decimalDisplay = false;
+                    }
                 } else {
-                    numberEntered = String.valueOf(roman.convertToInt(numberEntered));
-                    display.setText(numberEntered);
-                    decimalDisplay = true;
+                    if (String.valueOf(roman.convertToInt(numberEntered)).equals("0")) {
+                        String message = "Invalid Roman numeral entered";
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                    } else {
+                        numberEntered = String.valueOf(roman.convertToInt(numberEntered));
+                        display.setText(numberEntered);
+                        decimalDisplay = true;
+                    }
+
                 }
             }
         }
     }
 
     public void changeButtonsClick (View view) {
+        answerDisplay.setText("");
         view.performHapticFeedback(1);
         buttonsDisplayed = (String) view.getTag();
 
         if (buttonsDisplayed.equals("roman") && !romanButtonsOn) {
+            String message = "Calculations with roman numerals are rounded";
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             for (int i = 0; i < romanButtons.length; i++) {
                 romanButtons[i].setVisibility(View.VISIBLE);
             }
