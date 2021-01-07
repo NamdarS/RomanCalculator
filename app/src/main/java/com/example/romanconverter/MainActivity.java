@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,8 +39,9 @@ public class MainActivity extends AppCompatActivity {
     boolean readyToCalculate = false;
     boolean calculationDone = false;
     boolean romanButtonsOn = false;
-    boolean decimalDisplay = true;
     boolean operationSelected = false;
+    boolean decimalDisplay = true;
+
 
     //display and data storage
     TextView display;
@@ -86,7 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void numberButtonClick (View view) {
+    public void numberButtonClick(View view) {
+        buttonAnimation(view);
         if (checkLimit()) {
             String message = "Can't enter more than 12 digits";
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
@@ -101,26 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 decimalDisplay = true;
             }
 
-            if (calculation) {
-                display.setText("");
-                secondNumberEntered = numberEntered;
-                numberEntered = "";
-                calculation = false;
-                readyToCalculate = true;
-            }
-
-            if (calculationDone) {
-                if (!operationSelected) {
-                    secondNumberEntered = numberEntered;
-                }
-                numberEntered = "";
-                display.setText("");
-                calculationDone = false;
-            }
-
-            if (operation.equals("")) {
-                answerDisplay.setText("");
-            }
+            checkTypingConditions();
 
             Button curButton = (Button) view;
             int curValue = decimalButtonValues.get(curButton.getId());
@@ -129,7 +114,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void romanButtonClick (View view) {
+    public void romanButtonClick(View view) {
+        buttonAnimation(view);
         if (checkLimit()) {
             String message = "Can't enter more than 12 numbers";
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
@@ -144,26 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 decimalDisplay = false;
             }
 
-            if (calculation) {
-                display.setText("");
-                secondNumberEntered = numberEntered;
-                numberEntered = "";
-                calculation = false;
-                readyToCalculate = true;
-            }
-
-            if (calculationDone) {
-                if (!operationSelected) {
-                    secondNumberEntered = numberEntered;
-                }
-                numberEntered = "";
-                display.setText("");
-                calculationDone = false;
-            }
-
-            if (operation.equals("")) {
-                answerDisplay.setText("");
-            }
+            checkTypingConditions();
 
             Button curButton = (Button) view;
             String curValue = romanButtonValues.get(curButton.getId());
@@ -172,7 +139,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void deleteClick (View view) {
+    public void deleteClick(View view) {
+        buttonAnimation(view);
         view.performHapticFeedback(1);
 
         if (display.length() > 0) {
@@ -181,26 +149,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void operationClick (View view) {
+    public void operationClick(View view) {
+        buttonAnimation(view);
         view.performHapticFeedback(1);
-        String message =  "Convert back to do operations";
-        if (decimalDisplay != romanButtonsOn) {
-            if (!calculation && !readyToCalculate ||calculationDone) {
-                operation = (String) view.getTag();
-                calculation = true;
-                operationSelected = true;
-                return;
-            } else {
-                message = "One operation at a time";
+
+        if (numberEntered.length() > 0) {
+            String message =  "Convert back to do operations";
+            if (decimalDisplay != romanButtonsOn) {
+                if (!calculation && !readyToCalculate ||calculationDone) {
+                    operation = (String) view.getTag();
+                    calculation = true;
+                    operationSelected = true;
+                    return;
+                } else {
+                    message = "One operation at a time";
+                }
             }
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
         }
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    public void calculationClick (View view) {
+    public void calculationClick(View view) {
+        buttonAnimation(view);
         view.performHapticFeedback(1);
 
-        boolean reset = false;
         if (readyToCalculate) {
             double answer;
             double firstNumber;
@@ -213,7 +185,8 @@ public class MainActivity extends AppCompatActivity {
                 if (firstNumber == 0 || secondNumber == 0) {
                     String message = "Invalid Roman numeral entered";
                     Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                    reset = true;
+                    resetValues();
+                    return;
                 }
             } else {
                 firstNumber = Double.parseDouble(secondNumberEntered);
@@ -237,7 +210,8 @@ public class MainActivity extends AppCompatActivity {
                 if (answer < 1) {
                     String message = "Roman numerals can't be negative or decimals";
                     Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                    reset = true;
+                    resetValues();
+                    return;
                 } else {
                     numberEntered = roman.convertToString((int) answer);
                 }
@@ -248,15 +222,10 @@ public class MainActivity extends AppCompatActivity {
             operation = "";
             secondNumberEntered = "";
 
-            if (checkLimit() || reset) {
-                display.setText("");
-                answerDisplay.setText("");
-                numberEntered = "";
-                calculationDone = false;
-                if (!reset) {
-                    String message = "Too big to compute";
-                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                }
+            if (checkLimit()) {
+                String message = "Too big to compute";
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                resetValues();
                 return;
             }
 
@@ -265,7 +234,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void convertValueClick (View view) {
+    public void convertValueClick(View view) {
+        buttonAnimation(view);
         view.performHapticFeedback(1);
         if (!calculation || !readyToCalculate) {
             if (numberEntered.length() > 0) {
@@ -294,7 +264,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void changeButtonsClick (View view) {
+    public void changeButtonsClick(View view) {
+        buttonAnimation(view);
         answerDisplay.setText("");
         view.performHapticFeedback(1);
         buttonsDisplayed = (String) view.getTag();
@@ -317,13 +288,58 @@ public class MainActivity extends AppCompatActivity {
             decimalDisplay = true;
         }
 
+        resetValues();
+    }
+
+    public void clearClick(View view) {
+        buttonAnimation(view);
+        view.performHapticFeedback(1);
+        resetValues();
+    }
+
+    public void buttonAnimation(View view) {
+        float pivotX = (float) view.getWidth() / 2;
+        float pivotY = (float) view.getHeight() / 2;
+        ScaleAnimation animation = new ScaleAnimation(0.9f, 1f, 0.9f, 1f, pivotX, pivotY);
+        animation.setDuration(150);
+        view.startAnimation(animation);
+    }
+
+    public void checkTypingConditions() {
+        if (calculation) {
+            display.setText("");
+            secondNumberEntered = numberEntered;
+            numberEntered = "";
+            calculation = false;
+            readyToCalculate = true;
+        }
+
+        if (calculationDone) {
+            if (!operationSelected) {
+                secondNumberEntered = numberEntered;
+            }
+            numberEntered = "";
+            display.setText("");
+            calculationDone = false;
+        }
+
+        if (operation.equals("")) {
+            answerDisplay.setText("");
+        }
+    }
+
+    public void resetValues() {
         display.setText("");
+        answerDisplay.setText("");
         numberEntered = "";
         secondNumberEntered = "";
         operation = "";
-        calculation = false;
-        readyToCalculate = false;
+        boolean calculation = false;
+        boolean readyToCalculate = false;
+        boolean calculationDone = false;
+        boolean operationSelected = false;
     }
+
 
     public boolean checkLimit () {
         if (numberEntered.length() > 11 || numberEntered.contains("E")) {
@@ -331,4 +347,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
+
+
 }
