@@ -244,7 +244,10 @@ public class MainActivity extends AppCompatActivity {
                     if (value < 0) {
                         String message = "Roman numerals can't be negative";
                         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                    } else {
+                    } else if (value % 1 != 0)  {
+                        String message = "Only whole numbers can be converted to Roman";
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                    } {
                         numberEntered = roman.convertToString((int) value);
                         display.setText(numberEntered);
                         decimalDisplay = false;
