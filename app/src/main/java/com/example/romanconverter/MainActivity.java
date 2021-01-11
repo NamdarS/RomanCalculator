@@ -276,17 +276,13 @@ public class MainActivity extends AppCompatActivity {
         if (buttonsDisplayed.equals("roman") && !romanButtonsOn) {
             String message = "Calculations with roman numerals are rounded";
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-            for (int i = 0; i < romanButtons.length; i++) {
-                romanButtons[i].setVisibility(View.VISIBLE);
-            }
+            toggleButtons(romanButtons, decimalButtons);
             romanButtonsOn = true;
             decimalDisplay = false;
         }
 
         else if (buttonsDisplayed.equals("decimal") && romanButtonsOn) {
-            for (int i = 0; i < romanButtons.length; i++) {
-                romanButtons[i].setVisibility(View.INVISIBLE);
-            }
+            toggleButtons(decimalButtons, romanButtons);
             romanButtonsOn = false;
             decimalDisplay = true;
         }
@@ -306,6 +302,20 @@ public class MainActivity extends AppCompatActivity {
         ScaleAnimation animation = new ScaleAnimation(0.9f, 1f, 0.9f, 1f, pivotX, pivotY);
         animation.setDuration(150);
         view.startAnimation(animation);
+    }
+
+    public void toggleButtons (Button[] on, Button[] off) {
+        for (int i = 0; i < off.length; i++) {
+            if (off[i] != null) {
+                off[i].setVisibility(View.INVISIBLE);
+            }
+        }
+
+        for (int i = 0; i < on.length; i++) {
+            if (on[i] != null) {
+                on[i].setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     public void checkTypingConditions() {
@@ -342,7 +352,6 @@ public class MainActivity extends AppCompatActivity {
         boolean calculationDone = false;
         boolean operationSelected = false;
     }
-
 
     public boolean checkLimit () {
         if (numberEntered.length() > 11 || numberEntered.contains("E")) {
