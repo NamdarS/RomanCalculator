@@ -3,10 +3,7 @@ package com.example.romanconverter;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Display;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.TextView;
@@ -16,23 +13,20 @@ import java.util.Hashtable;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "";
     //decimal buttons
     Button decimal0, decimal1, decimal2, decimal3, decimal4,
            decimal5, decimal6, decimal7, decimal8, decimal9;
-
     Button[] decimalButtons;
 
     //roman buttons and values
     Button roman0, roman1, roman2, roman3, roman4,
            roman5, roman6;
-
     Button[] romanButtons;
     String[] romanValues;
 
     //numbers and operations
     String numberEntered = "";
-    String secondNumberEntered = "";
+    String firstNumberEntered = "";
     String operation = "";
     String buttonsDisplayed = "";
 
@@ -157,16 +151,17 @@ public class MainActivity extends AppCompatActivity {
     public void operationClick(View view) {
         buttonAnimation(view);
         view.performHapticFeedback(1);
+        String message = "";
 
         if (numberEntered.length() > 0) {
-            String message =  "Convert back to do operations";
+            message =  "Convert back to do operations";
             if (decimalDisplay != romanButtonsOn) {
                 if (!calculation && !readyToCalculate ||calculationDone) {
                     operation = (String) view.getTag();
                     calculation = true;
                     operationSelected = true;
                     if (operation.equals("divide")) {
-                        message = "Quotients will be rounded";
+                        message = "Quotient will be rounded";
                         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                     }
                     return;
@@ -189,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             if (romanButtonsOn) {
-                firstNumber = roman.convertToInt(secondNumberEntered);
+                firstNumber = roman.convertToInt(firstNumberEntered);
                 secondNumber = roman.convertToInt(numberEntered);
                 if (firstNumber == 0 || secondNumber == 0) {
                     String message = "Invalid Roman numeral entered";
@@ -198,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
             } else {
-                firstNumber = Integer.parseInt(secondNumberEntered);
+                firstNumber = Integer.parseInt(firstNumberEntered);
                 secondNumber = Integer.parseInt(numberEntered);
             }
 
@@ -214,7 +209,6 @@ public class MainActivity extends AppCompatActivity {
 
             numberEntered = String.valueOf(answer);
 
-
             if (answer < 1) {
                 String message = "Negative answers not permitted";
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
@@ -225,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
             readyToCalculate = false;
             calculationDone = true;
             operation = "";
-            secondNumberEntered = "";
+            firstNumberEntered = "";
 
             if (checkLimit()) {
                 String message = "Can't exceed limit of 4999";
@@ -234,8 +228,12 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            display.setText("");
+            if (romanButtonsOn) {
+                numberEntered = roman.convertToString(Integer.parseInt(numberEntered));
+            }
+
             answerDisplay.setText(numberEntered);
+            display.setText("");
         }
     }
 
@@ -244,23 +242,23 @@ public class MainActivity extends AppCompatActivity {
         view.performHapticFeedback(1);
         if (!calculation || !readyToCalculate) {
             if (numberEntered.length() > 0) {
-                if (checkLimit()) {
-                    return;
-                }
                 if (decimalDisplay) {
+
                     int value = Integer.parseInt(numberEntered);
                     numberEntered = roman.convertToString(value);
                     display.setText(numberEntered);
                     decimalDisplay = false;
                 } else {
+
                     if (String.valueOf(roman.convertToInt(numberEntered)).equals("0")) {
                         String message = "Invalid Roman numeral entered";
                         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                    } else {
-                        numberEntered = String.valueOf(roman.convertToInt(numberEntered));
-                        display.setText(numberEntered);
-                        decimalDisplay = true;
+                        return;
                     }
+
+                    numberEntered = String.valueOf(roman.convertToInt(numberEntered));
+                    display.setText(numberEntered);
+                    decimalDisplay = true;
                 }
             }
         }
@@ -268,8 +266,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void changeButtonsClick(View view) {
         buttonAnimation(view);
-        answerDisplay.setText("");
         view.performHapticFeedback(1);
+        answerDisplay.setText("");
         buttonsDisplayed = (String) view.getTag();
 
         if (buttonsDisplayed.equals("roman") && !romanButtonsOn) {
@@ -296,7 +294,8 @@ public class MainActivity extends AppCompatActivity {
     public void buttonAnimation(View view) {
         float pivotX = (float) view.getWidth() / 2;
         float pivotY = (float) view.getHeight() / 2;
-        ScaleAnimation animation = new ScaleAnimation(0.9f, 1f, 0.9f, 1f, pivotX, pivotY);
+        ScaleAnimation animation =
+                new ScaleAnimation(0.9f, 1f, 0.9f, 1f, pivotX, pivotY);
         animation.setDuration(150);
         view.startAnimation(animation);
     }
@@ -318,7 +317,7 @@ public class MainActivity extends AppCompatActivity {
     public void checkTypingConditions() {
         if (calculation) {
             display.setText("");
-            secondNumberEntered = numberEntered;
+            firstNumberEntered = numberEntered;
             numberEntered = "";
             calculation = false;
             readyToCalculate = true;
@@ -326,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (calculationDone) {
             if (!operationSelected) {
-                secondNumberEntered = numberEntered;
+                firstNumberEntered = numberEntered;
             }
             numberEntered = "";
             display.setText("");
@@ -342,7 +341,7 @@ public class MainActivity extends AppCompatActivity {
         display.setText("");
         answerDisplay.setText("");
         numberEntered = "";
-        secondNumberEntered = "";
+        firstNumberEntered = "";
         operation = "";
         calculation = false;
         readyToCalculate = false;
