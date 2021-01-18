@@ -2,6 +2,7 @@ package com.example.romanconverter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.ScaleAnimation;
@@ -12,7 +13,6 @@ import android.widget.Toast;
 import java.util.Hashtable;
 
 public class MainActivity extends AppCompatActivity {
-
     //decimal buttons
     Button decimal0, decimal1, decimal2, decimal3, decimal4,
            decimal5, decimal6, decimal7, decimal8, decimal9;
@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     boolean romanButtonsOn = false;
     boolean operationSelected = false;
     boolean decimalDisplay = true;
-
 
     //display and data storage
     TextView display;
@@ -82,12 +81,10 @@ public class MainActivity extends AppCompatActivity {
 
         //create roman object for conversions and calculations
         roman = new Roman();
-
     }
 
     public void numberButtonClick(View view) {
         buttonAnimation(view);
-        view.performHapticFeedback(1);
 
         if (!romanButtonsOn) {
             if (!decimalDisplay) {
@@ -113,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void romanButtonClick(View view) {
         buttonAnimation(view);
-        view.performHapticFeedback(1);
 
         if (romanButtonsOn) {
             if (decimalDisplay) {
@@ -140,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void deleteClick(View view) {
         buttonAnimation(view);
-        view.performHapticFeedback(1);
 
         if (display.length() > 0) {
             numberEntered = numberEntered.substring(0, numberEntered.length() - 1);
@@ -150,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void operationClick(View view) {
         buttonAnimation(view);
-        view.performHapticFeedback(1);
         String message = "";
 
         if (numberEntered.length() > 0) {
@@ -175,7 +169,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void calculationClick(View view) {
         buttonAnimation(view);
-        view.performHapticFeedback(1);
 
         if (readyToCalculate) {
             int answer;
@@ -239,7 +232,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void convertValueClick(View view) {
         buttonAnimation(view);
-        view.performHapticFeedback(1);
         if (!calculation || !readyToCalculate) {
             if (numberEntered.length() > 0) {
                 if (decimalDisplay) {
@@ -266,7 +258,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void changeButtonsClick(View view) {
         buttonAnimation(view);
-        view.performHapticFeedback(1);
         answerDisplay.setText("");
         buttonsDisplayed = (String) view.getTag();
 
@@ -287,8 +278,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void clearClick(View view) {
         buttonAnimation(view);
-        view.performHapticFeedback(1);
         resetValues();
+    }
+
+    public void switchActivityClick(View view) {
+        buttonAnimation(view);
+        Intent intent = new Intent(MainActivity.this, RomanDefinitionsActivity.class);
+        startActivity(intent);
     }
 
     public void buttonAnimation(View view) {
@@ -298,6 +294,7 @@ public class MainActivity extends AppCompatActivity {
                 new ScaleAnimation(0.9f, 1f, 0.9f, 1f, pivotX, pivotY);
         animation.setDuration(150);
         view.startAnimation(animation);
+        view.performHapticFeedback(1);
     }
 
     public void toggleButtons (Button[] on, Button[] off) {

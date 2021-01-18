@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">RomanConverter</string>
+    <string name="romanDefinitionsTitle">Roman Numeral Definitions</string>
+    <string name="romanNumeralDefinitions">
+        I = 1\nV = 5\nX = 10\nL = 50\nC = 100\nD = 500\nM = 1000
+    </string>
 </resources>

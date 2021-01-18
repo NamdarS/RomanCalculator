@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    android:screenOrientation="portrait"
     tools:context=".MainActivity">
 
 
@@ -263,7 +262,7 @@
         android:textColor="#FFFFFF"
         android:textSize="40sp"
         android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@+id/roman5"
+        app:layout_constraintStart_toEndOf="@+id/button5"
         app:layout_constraintTop_toBottomOf="@+id/convert" />
 
     <Button
@@ -325,45 +324,6 @@
         app:layout_constraintTop_toBottomOf="@+id/roman4" />
 
     <Button
-        android:id="@+id/convert"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="75dp"
-        android:layout_height="74dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="18dp"
-        android:background="@drawable/base_rounded_button"
-        android:fontFamily="sans-serif-light"
-        android:onClick="convertValueClick"
-        android:paddingRight="8dp"
-        android:text=" ⇌"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#4CAF50"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/convertToDecimal"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
-
-    <Button
-        android:id="@+id/delete"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="75dp"
-        android:layout_height="74dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="18dp"
-        android:background="@drawable/base_rounded_button"
-        android:fontFamily="sans-serif-light"
-        android:onClick="deleteClick"
-        android:text="⌫ "
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#D11818"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/convert"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
-
-    <Button
         android:id="@+id/convertToRoman"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="75dp"
@@ -417,7 +377,7 @@
         android:tag="divide"
         android:text="÷"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#FF3838"
+        android:textColor="#FD480E"
         android:textSize="54sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/button9"
@@ -438,7 +398,7 @@
         android:tag="add"
         android:text="+"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#FF3838"
+        android:textColor="#FD480E"
         android:textSize="54sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/button3"
@@ -479,7 +439,7 @@
         android:tag="multiply"
         android:text="×"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#FF3838"
+        android:textColor="#FD480E"
         android:textSize="54sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/button6"
@@ -517,15 +477,35 @@
         android:tag="subtract"
         android:text="—"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#FF3838"
+        android:textColor="#FD480E"
         android:textSize="54sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/buttonEquals"
         app:layout_constraintTop_toBottomOf="@+id/buttonAdd" />
 
+    <ImageButton
+        android:id="@+id/delete"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="75dp"
+        android:layout_height="74dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/base_rounded_button"
+        android:fontFamily="sans-serif-light"
+        android:onClick="deleteClick"
+        android:paddingLeft="10dp"
+        android:src="@drawable/ic_backspace"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#D11818"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/convert"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
     <TextView
         android:id="@+id/textView"
-        android:layout_width="301dp"
+        android:layout_width="200dp"
         android:layout_height="81dp"
         android:layout_marginTop="44dp"
         android:layout_marginEnd="58dp"
@@ -539,7 +519,7 @@
 
     <TextView
         android:id="@+id/answerTextView"
-        android:layout_width="301dp"
+        android:layout_width="200dp"
         android:layout_height="77dp"
         android:layout_marginTop="55dp"
         android:layout_marginEnd="58dp"
@@ -561,6 +541,38 @@
         android:background="#575757"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/answerTextView" />
+
+    <Button
+        android:id="@+id/helpButton"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="53dp"
+        android:layout_marginLeft="53dp"
+        android:layout_marginTop="228dp"
+        android:background="@drawable/ic_help"
+        android:onClick="switchActivityClick"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/convert"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="75dp"
+        android:layout_height="74dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/base_rounded_button"
+        android:fontFamily="sans-serif-light"
+        android:onClick="convertValueClick"
+        android:src="@drawable/ic_convert"
+        android:text=" ⇌"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#4CAF50"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/convertToDecimal"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
