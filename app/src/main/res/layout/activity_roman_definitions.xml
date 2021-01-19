@@ -9,43 +9,62 @@
 
     <Button
         android:id="@+id/backButton"
-        android:layout_width="47dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/abc_vector_test"
+        android:background="@drawable/ic_back"
         android:onClick="switchActivityClick"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/titleTextView"
-        android:layout_width="350dp"
-        android:layout_height="162dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginTop="88dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
         android:fontFamily="@font/titillium_web_semibold"
         android:gravity="center"
         android:text="@string/romanDefinitionsTitle"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#4CAF50"
-        android:textSize="48sp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="44sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/definitionsTextView"
-        android:layout_width="209dp"
-        android:layout_height="435dp"
-        android:layout_marginStart="120dp"
-        android:layout_marginLeft="120dp"
-        android:layout_marginBottom="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/tienne"
-        android:gravity="left"
+        android:gravity="start"
         android:text="@string/romanNumeralDefinitions"
         android:textSize="42sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
+
+    <TextView
+        android:id="@+id/tip2"
+        android:layout_width="wrap_content"
+        android:layout_height="170dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/tip2"
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@+id/definitionsTextView"
+        app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
+
+    <TextView
+        android:id="@+id/tip3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/tip3"
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@+id/definitionsTextView"
+        app:layout_constraintTop_toBottomOf="@+id/tip2" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

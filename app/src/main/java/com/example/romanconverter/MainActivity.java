@@ -200,8 +200,6 @@ public class MainActivity extends AppCompatActivity {
                 answer = firstNumber / secondNumber;
             }
 
-            numberEntered = String.valueOf(answer);
-
             if (answer < 1) {
                 String message = "Negative answers not permitted";
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
@@ -209,10 +207,11 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            readyToCalculate = false;
-            calculationDone = true;
-            operation = "";
-            firstNumberEntered = "";
+            if (romanButtonsOn) {
+                numberEntered = roman.convertToString(answer);
+            } else {
+                numberEntered = String.valueOf(answer);
+            }
 
             if (checkLimit()) {
                 String message = "Can't exceed limit of 4999";
@@ -221,12 +220,12 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            if (romanButtonsOn) {
-                numberEntered = roman.convertToString(Integer.parseInt(numberEntered));
-            }
-
             answerDisplay.setText(numberEntered);
             display.setText("");
+            readyToCalculate = false;
+            calculationDone = true;
+            operation = "";
+            firstNumberEntered = "";
         }
     }
 
@@ -348,7 +347,7 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean checkLimit () {
         int n;
-        if (!decimalDisplay) {
+        if (romanButtonsOn) {
             n = roman.convertToInt(numberEntered);
         } else {
             n = Integer.parseInt(numberEntered);
