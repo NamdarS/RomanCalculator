@@ -4,13 +4,7 @@
     <string name="romanNumeralDefinitions">
         I = 1\nV = 5\nX = 10\nL = 50\nC = 100\nD = 500\nM = 1000
     </string>
-    <string name="tip1">
-        - Roman numerals work by adding and subtraction values
-    </string>
-    <string name="tip2">
-        - A symbol\nappearing \nafter a \nlarger symbol\nis added
-    </string>
-    <string name="tip3">
-        - A symbol\nappearing\nbefore a\nlarger symbol\nis subtracted
-    </string>
+    <string name="tip1">Roman numerals work by adding and subtraction values</string>
+    <string name="tip2">Subtract if\npreceding\na larger \nsymbol</string>
+    <string name="tip3">Add if\nin front</string>
 </resources>
