@@ -44,9 +44,6 @@ public class MainActivity extends AppCompatActivity {
     Hashtable<Integer, Integer> decimalButtonValues;
     Hashtable<Integer, String> romanButtonValues;
 
-    //roman conversion object
-    Roman roman;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,9 +75,6 @@ public class MainActivity extends AppCompatActivity {
             romanButtons[i] = findViewById(id);
             romanButtonValues.put(id, romanValues[i]);
         }
-
-        //create roman object for conversions and calculations
-        roman = new Roman();
     }
 
     public void numberButtonClick(View view) {
@@ -129,8 +123,8 @@ public class MainActivity extends AppCompatActivity {
                 numberEntered = numberEntered.substring(0, numberEntered.length() - 1);
                 return;
             }
+            romanRules();
             display.append(curValue);
-
         }
     }
 
@@ -140,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
         if (display.length() > 0) {
             numberEntered = numberEntered.substring(0, numberEntered.length() - 1);
             display.setText(numberEntered);
+            enableRomanButtons();
+            romanRules();
         }
     }
 
@@ -177,8 +173,8 @@ public class MainActivity extends AppCompatActivity {
 
 
             if (romanButtonsOn) {
-                firstNumber = roman.convertToInt(firstNumberEntered);
-                secondNumber = roman.convertToInt(numberEntered);
+                firstNumber = Roman.convertToInt(firstNumberEntered);
+                secondNumber = Roman.convertToInt(numberEntered);
                 if (firstNumber == 0 || secondNumber == 0) {
                     String message = "Invalid Roman numeral entered";
                     Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
@@ -208,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if (romanButtonsOn) {
-                numberEntered = roman.convertToString(answer);
+                numberEntered = Roman.convertToString(answer);
             } else {
                 numberEntered = String.valueOf(answer);
             }
@@ -236,18 +232,18 @@ public class MainActivity extends AppCompatActivity {
                 if (decimalDisplay) {
 
                     int value = Integer.parseInt(numberEntered);
-                    numberEntered = roman.convertToString(value);
+                    numberEntered = Roman.convertToString(value);
                     display.setText(numberEntered);
                     decimalDisplay = false;
                 } else {
 
-                    if (String.valueOf(roman.convertToInt(numberEntered)).equals("0")) {
+                    if (String.valueOf(Roman.convertToInt(numberEntered)).equals("0")) {
                         String message = "Invalid Roman numeral entered";
                         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    numberEntered = String.valueOf(roman.convertToInt(numberEntered));
+                    numberEntered = String.valueOf(Roman.convertToInt(numberEntered));
                     display.setText(numberEntered);
                     decimalDisplay = true;
                 }
@@ -278,6 +274,7 @@ public class MainActivity extends AppCompatActivity {
     public void clearClick(View view) {
         buttonAnimation(view);
         resetValues();
+        enableRomanButtons();
     }
 
     public void switchActivityClick(View view) {
@@ -307,6 +304,74 @@ public class MainActivity extends AppCompatActivity {
             if (on[i] != null) {
                 on[i].setVisibility(View.VISIBLE);
             }
+        }
+    }
+
+    public void romanRules() {
+        if (numberEntered.length() < 1) {
+            return;
+        }
+        String curSymbol = numberEntered.substring(numberEntered.length() - 1);
+        String thirdChar = "";
+        String secondChar = "";
+        int curValueIndex = 0;
+        int startIndex = -1;
+
+        Button curButton = null;
+        for (int i = 0; i < romanValues.length; i++) {
+            if (romanValues[i].equals(curSymbol)) {
+                curButton = romanButtons[i];
+                curValueIndex = i + 1;
+            }
+        }
+
+        if (curSymbol.equals("V") || curSymbol.equals("L") || curSymbol.equals("D")) {
+            curButton.setClickable(false);
+            if (curSymbol.equals("V")) {
+                startIndex = 2;
+            } else if (curSymbol.equals("L")) {
+                startIndex = 4;
+            } else {
+                startIndex = 6;
+            }
+        } else if (curSymbol.equals("I") || curSymbol.equals("X")) {
+            if (curSymbol.equals("I")) {
+                startIndex = 3;
+            } else {
+                romanButtons[5].setClickable(false);
+            }
+        }
+
+        if (numberEntered.length() >= 2) {
+            secondChar= numberEntered.substring(numberEntered.length()-2, numberEntered.length()-1);
+
+            if (secondChar.equals(curSymbol)) {
+                startIndex = curValueIndex;
+            } else {
+                if (secondChar.equals("I")) {
+                    startIndex = 0;
+                }
+            }
+
+            if (numberEntered.length() >= 3) {
+                thirdChar= numberEntered.substring(numberEntered.length()-3, numberEntered.length()-2);
+
+                if (thirdChar.equals(secondChar) && secondChar.equals(curSymbol)) {
+                    curButton.setClickable(false);
+                }
+            }
+        }
+
+        if (startIndex >= 0) {
+            for (int i = startIndex; i < romanButtons.length; i++) {
+                romanButtons[i].setClickable(false);
+            }
+        }
+    }
+    
+    public void enableRomanButtons() {
+        for (int i = 0; i < romanButtons.length; i++) {
+            romanButtons[i].setClickable(true);
         }
     }
 
@@ -348,7 +413,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean checkLimit () {
         int n;
         if (romanButtonsOn) {
-            n = roman.convertToInt(numberEntered);
+            n = Roman.convertToInt(numberEntered);
         } else {
             n = Integer.parseInt(numberEntered);
         }
