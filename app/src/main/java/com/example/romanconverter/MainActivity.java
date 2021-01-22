@@ -260,9 +260,7 @@ public class MainActivity extends AppCompatActivity {
             toggleButtons(romanButtons, decimalButtons);
             romanButtonsOn = true;
             decimalDisplay = false;
-        }
-
-        else if (buttonsDisplayed.equals("decimal") && romanButtonsOn) {
+        } else if (buttonsDisplayed.equals("decimal") && romanButtonsOn) {
             toggleButtons(decimalButtons, romanButtons);
             romanButtonsOn = false;
             decimalDisplay = true;
@@ -311,6 +309,7 @@ public class MainActivity extends AppCompatActivity {
         if (numberEntered.length() < 1) {
             return;
         }
+
         String curSymbol = numberEntered.substring(numberEntered.length() - 1);
         String thirdChar = "";
         String secondChar = "";
@@ -326,19 +325,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (curSymbol.equals("V") || curSymbol.equals("L") || curSymbol.equals("D")) {
-            curButton.setClickable(false);
             if (curSymbol.equals("V")) {
-                startIndex = 2;
+                startIndex = 1;
             } else if (curSymbol.equals("L")) {
-                startIndex = 4;
+                startIndex = 3;
             } else {
-                startIndex = 6;
+                startIndex = 5;
             }
         } else if (curSymbol.equals("I") || curSymbol.equals("X")) {
             if (curSymbol.equals("I")) {
                 startIndex = 3;
             } else {
                 romanButtons[5].setClickable(false);
+                romanButtons[5].setAlpha(0.5f);
             }
         }
 
@@ -358,6 +357,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (thirdChar.equals(secondChar) && secondChar.equals(curSymbol)) {
                     curButton.setClickable(false);
+                    curButton.setAlpha(0.5f);
                 }
             }
         }
@@ -365,6 +365,7 @@ public class MainActivity extends AppCompatActivity {
         if (startIndex >= 0) {
             for (int i = startIndex; i < romanButtons.length; i++) {
                 romanButtons[i].setClickable(false);
+                romanButtons[i].setAlpha(0.5f);
             }
         }
     }
@@ -372,6 +373,7 @@ public class MainActivity extends AppCompatActivity {
     public void enableRomanButtons() {
         for (int i = 0; i < romanButtons.length; i++) {
             romanButtons[i].setClickable(true);
+            romanButtons[i].setAlpha(1f);
         }
     }
 
