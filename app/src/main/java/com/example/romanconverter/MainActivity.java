@@ -223,6 +223,7 @@ public class MainActivity extends AppCompatActivity {
             calculationDone = true;
             operation = "";
             firstNumberEntered = "";
+            enableRomanButtons();
         }
     }
 
@@ -311,65 +312,53 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        String curSymbol = numberEntered.substring(numberEntered.length() - 1);
-        String thirdChar = "";
-        String secondChar = "";
-        int curValueIndex = 0;
+        String curChar = numberEntered.substring(numberEntered.length() - 1);
+        int curCharIndex = 0;
         int startIndex = -1;
 
         Button curButton = null;
         for (int i = 0; i < romanValues.length; i++) {
-            if (romanValues[i].equals(curSymbol)) {
+            if (romanValues[i].equals(curChar)) {
                 curButton = romanButtons[i];
-                curValueIndex = i + 1;
+                curCharIndex = i;
             }
         }
 
-        if (curSymbol.equals("V") || curSymbol.equals("L") || curSymbol.equals("D")) {
-            if (curSymbol.equals("V")) {
-                startIndex = 1;
-            } else if (curSymbol.equals("L")) {
-                startIndex = 3;
-            } else {
-                startIndex = 5;
-            }
-        } else if (curSymbol.equals("I") || curSymbol.equals("X")) {
-            if (curSymbol.equals("I")) {
-                startIndex = 3;
-            } else {
-                romanButtons[5].setClickable(false);
-                romanButtons[6].setClickable(false);
-                romanButtons[5].setAlpha(0.5f);
-                romanButtons[6].setAlpha(0.5f);
-            }
+        if (curChar.equals("V") || curChar.equals("L") || curChar.equals("D")) {
+            startIndex = curCharIndex;
+        } else if (curChar.equals("I") || curChar.equals("X")) {
+            startIndex = curCharIndex + 3;
         }
 
         if (numberEntered.length() >= 2) {
-            secondChar= numberEntered.substring(numberEntered.length()-2, numberEntered.length()-1);
+            String secondLastChar =
+                    numberEntered.substring(numberEntered.length()-2, numberEntered.length()-1);
 
-            if (secondChar.equals(curSymbol)) {
-                startIndex = curValueIndex;
-            } else {
-                if (secondChar.equals("I")) {
-                    startIndex = 0;
-                } else if (secondChar.equals("X") && curSymbol.equals("C")) {
-                    startIndex = 2;
-                } else if (secondChar.equals("C") && curSymbol.equals("M")) {
-                    startIndex = 5;
+            int secondCharIndex;
+            for (int i = 0; i < romanValues.length; i++) {
+                if (romanValues[i].equals(secondLastChar)) {
+                    secondCharIndex = i;
+                    if (secondCharIndex < curCharIndex) {
+                        startIndex = secondCharIndex;
+                    }
                 }
             }
 
-            if (numberEntered.length() >= 3 && !curSymbol.equals("M")) {
-                thirdChar =
+            if (secondLastChar.equals(curChar)) {
+                startIndex = curCharIndex + 1;
+            }
+
+            if (numberEntered.length() >= 3 && !curChar.equals("M")) {
+                String thirdLatChar =
                         numberEntered.substring(numberEntered.length()-3, numberEntered.length()-2);
-                if (thirdChar.equals(secondChar) && secondChar.equals(curSymbol)) {
+                if (thirdLatChar.equals(secondLastChar) && secondLastChar.equals(curChar)) {
                     curButton.setClickable(false);
                     curButton.setAlpha(0.5f);
                 }
             }
         }
 
-        if (startIndex >= 0) {
+        if (startIndex > -1) {
             for (int i = startIndex; i < romanButtons.length; i++) {
                 romanButtons[i].setClickable(false);
                 romanButtons[i].setAlpha(0.5f);
@@ -417,6 +406,7 @@ public class MainActivity extends AppCompatActivity {
         readyToCalculate = false;
         calculationDone = false;
         operationSelected = false;
+        enableRomanButtons();
     }
 
     public boolean checkLimit () {
