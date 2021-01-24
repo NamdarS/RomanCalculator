@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
                         message = "Quotient will be rounded";
                         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                     }
+                    enableRomanButtons();
                     return;
                 } else {
                     message = "One operation at a time";
@@ -337,7 +338,9 @@ public class MainActivity extends AppCompatActivity {
                 startIndex = 3;
             } else {
                 romanButtons[5].setClickable(false);
+                romanButtons[6].setClickable(false);
                 romanButtons[5].setAlpha(0.5f);
+                romanButtons[6].setAlpha(0.5f);
             }
         }
 
@@ -349,12 +352,14 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 if (secondChar.equals("I")) {
                     startIndex = 0;
+                } else if (secondChar.equals("X") && curSymbol.equals("C")) {
+                    startIndex = 2;
                 }
             }
 
-            if (numberEntered.length() >= 3) {
-                thirdChar= numberEntered.substring(numberEntered.length()-3, numberEntered.length()-2);
-
+            if (numberEntered.length() >= 3 && !curSymbol.equals("M")) {
+                thirdChar =
+                        numberEntered.substring(numberEntered.length()-3, numberEntered.length()-2);
                 if (thirdChar.equals(secondChar) && secondChar.equals(curSymbol)) {
                     curButton.setClickable(false);
                     curButton.setAlpha(0.5f);
