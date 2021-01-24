@@ -354,6 +354,8 @@ public class MainActivity extends AppCompatActivity {
                     startIndex = 0;
                 } else if (secondChar.equals("X") && curSymbol.equals("C")) {
                     startIndex = 2;
+                } else if (secondChar.equals("C") && curSymbol.equals("M")) {
+                    startIndex = 5;
                 }
             }
 
