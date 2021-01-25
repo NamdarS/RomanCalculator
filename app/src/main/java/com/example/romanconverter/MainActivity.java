@@ -327,6 +327,7 @@ public class MainActivity extends AppCompatActivity {
         if (curChar.equals("V") || curChar.equals("L") || curChar.equals("D")) {
             startIndex = curCharIndex;
         } else if (curChar.equals("I") || curChar.equals("X")) {
+            enableRomanButtons();
             startIndex = curCharIndex + 3;
         }
 
@@ -416,10 +417,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             n = Integer.parseInt(numberEntered);
         }
-        if (n > 4999) {
-            return true;
-        }
-        return false;
+        return n > 4999;
     }
 
 }
