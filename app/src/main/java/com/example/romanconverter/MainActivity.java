@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
@@ -92,12 +93,15 @@ public class MainActivity extends AppCompatActivity {
             Button curButton = (Button) view;
             int curValue = decimalButtonValues.get(curButton.getId());
             numberEntered += String.valueOf(curValue);
-            if (checkLimit()) {
-                String message = "Can't exceed limit of 4999";
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+
+            try {
+                checkLimit();
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 numberEntered = numberEntered.substring(0, numberEntered.length() - 1);
                 return;
             }
+
             display.append(String.valueOf(curValue));
         }
     }
@@ -117,12 +121,15 @@ public class MainActivity extends AppCompatActivity {
             Button curButton = (Button) view;
             String curValue = romanButtonValues.get(curButton.getId());
             numberEntered += curValue;
-            if (checkLimit()) {
-                String message = "Can't exceed limit of 4999";
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+
+            try {
+                checkLimit();
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 numberEntered = numberEntered.substring(0, numberEntered.length() - 1);
                 return;
             }
+
             romanRules();
             display.append(curValue);
         }
@@ -197,9 +204,10 @@ public class MainActivity extends AppCompatActivity {
                 answer = firstNumber / secondNumber;
             }
 
-            if (answer < 1) {
-                String message = "Negative answers not permitted";
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            try {
+                checkLimit();
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 resetValues();
                 return;
             }
@@ -210,9 +218,10 @@ public class MainActivity extends AppCompatActivity {
                 numberEntered = String.valueOf(answer);
             }
 
-            if (checkLimit()) {
-                String message = "Can't exceed limit of 4999";
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            try {
+                checkLimit();
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 resetValues();
                 return;
             }
@@ -410,14 +419,17 @@ public class MainActivity extends AppCompatActivity {
         enableRomanButtons();
     }
 
-    public boolean checkLimit () {
+    public void checkLimit () throws OutOfRangeException {
         int n;
         if (romanButtonsOn) {
             n = Roman.convertToInt(numberEntered);
         } else {
             n = Integer.parseInt(numberEntered);
         }
-        return n > 4999;
+
+        if (n < 1 || n > 4999) {
+            throw new OutOfRangeException("Out Of Range (1 to 4999)");
+        }
     }
 
 }
