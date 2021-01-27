@@ -16,6 +16,11 @@ public class RomanDefinitionsActivity extends AppCompatActivity {
         mainActivity = new MainActivity();
     }
 
+    /**
+     * Switch activity back to the main activity
+     * to access the calculator and converter
+     * @param view the back button
+     */
     public void switchActivityClick(View view) {
         mainActivity.buttonAnimation(view);
         Intent intent = new Intent(RomanDefinitionsActivity.this, MainActivity.class);
