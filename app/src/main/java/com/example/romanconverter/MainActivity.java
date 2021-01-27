@@ -403,8 +403,10 @@ public class MainActivity extends AppCompatActivity {
         }
         //"I" & "X" can only be subtracted from the next 2 larger numerals
         else if (curChar.equals("I") || curChar.equals("X")) {
-            //enable all buttons first because "I" and "X" can be subtracted from different numerals
-            enableRomanButtons();
+            //in case some valid numerals were previously disabled
+            if (!numberEntered.contains("V") && !numberEntered.contains("L")) {
+                enableRomanButtons();
+            }
             startIndex = curCharIndex + 3;
         }
 
@@ -511,29 +513,29 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Check whether within 1 - 4999 limit
-     * @throws OutOfRangeException
+     * @throws InvalidNumberException
      */
-    public void checkLimit () throws OutOfRangeException {
+    public void checkLimit () throws InvalidNumberException {
         int n;
         if (romanButtonsOn) {
-            n = Roman.convertToInt(numberEntered);
+            n = Roman.convertToInt(numberEntered); //will return 0 if roman numeral is invalid
         } else {
             n = Integer.parseInt(numberEntered);
         }
 
         if (n < 1 || n > 4999) {
-            throw new OutOfRangeException("Out Of Range (1 to 4999)");
+            throw new InvalidNumberException("Out Of Range (1 to 4999)");
         }
     }
 
     /**
      * Overloaded method to check whether
      * parameter passed is within the limit
-     * @throws OutOfRangeException
+     * @throws InvalidNumberException
      */
-    public void checkLimit (int n) throws OutOfRangeException {
+    public void checkLimit (int n) throws InvalidNumberException {
         if (n < 1 || n > 4999) {
-            throw new OutOfRangeException("Out Of Range (1 to 4999)");
+            throw new InvalidNumberException("Out Of Range (1 to 4999)");
         }
     }
 }
