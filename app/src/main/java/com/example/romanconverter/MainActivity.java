@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
                     calculation = true;
                     operationSelected = true;
                     if (operation.equals("divide")) {
-                        message = "Quotient will be rounded";
+                        message = "Quotient may be rounded";
                         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                     }
                     enableRomanButtons(); //enable all buttons for second number to be entered
