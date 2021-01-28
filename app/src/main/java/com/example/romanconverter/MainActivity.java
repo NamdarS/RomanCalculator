@@ -26,18 +26,18 @@ public class MainActivity extends AppCompatActivity {
     String[] romanValues;
 
     //numbers and operations
-    String numberEntered = "";
-    String firstNumberEntered = ""; //stores numberEntered when doing operations
-    String operation = ""; //keep track of what operation is being performed using the view's tag
-    String buttonsDisplayed = ""; //keep track of what buttons are displayed using the view's tag
+    String numberEntered;
+    String firstNumberEntered; //stores numberEntered when doing operations
+    String operation; //keep track of what operation is being performed using the view's tag
+    String buttonsDisplayed; //keep track of what buttons are displayed using the view's tag
 
     //keeping track of operations and number system
-    boolean calculation = false; //set to true when an operation button is pressed
-    boolean readyToCalculate = false; //set to true when second number has been entered
-    boolean calculationDone = false; //set to true when calculation was completed
-    boolean romanButtonsOn = false; //keep track of which buttons are on
-    boolean operationSelected = false; //set to true when chaining operations
-    boolean decimalDisplay = true; //keep track of whether display is roman or decimal
+    boolean calculation; //set to true when an operation button is pressed
+    boolean readyToCalculate; //set to true when second number has been entered
+    boolean calculationDone; //set to true when calculation was completed
+    boolean romanButtonsOn; //keep track of which buttons are on
+    boolean operationSelected; //set to true when chaining operations
+    boolean decimalDisplay; //keep track of whether display is roman or decimal
 
     //display and data storage
     TextView display;
@@ -77,6 +77,19 @@ public class MainActivity extends AppCompatActivity {
             romanButtons[i] = findViewById(id);
             romanButtonValues.put(id, romanValues[i]);
         }
+
+        //initializations
+        numberEntered = "";
+        firstNumberEntered = "";
+        operation = "";
+        buttonsDisplayed = "";
+
+        calculation = false;
+        readyToCalculate = false;
+        calculationDone = false;
+        romanButtonsOn = false;
+        operationSelected = false;
+        decimalDisplay = true;
     }
 
     /**
