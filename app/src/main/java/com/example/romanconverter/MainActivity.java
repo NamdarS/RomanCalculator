@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
@@ -14,30 +13,30 @@ import android.widget.Toast;
 import java.util.Hashtable;
 
 public class MainActivity extends AppCompatActivity {
-    //decimal buttons and button array
+    //decimal buttons and arrays
     Button decimal0, decimal1, decimal2, decimal3, decimal4,
            decimal5, decimal6, decimal7, decimal8, decimal9;
     Button[] decimalButtons;
 
-    //roman buttons and button and values arrays
-    Button roman0, roman1, roman2, roman3, roman4,
-           roman5, roman6;
+    //roman buttons and arrays
+    Button roman0, roman1, roman2, roman3,
+           roman4, roman5, roman6;
     Button[] romanButtons;
     String[] romanValues;
 
     //numbers and operations
     String numberEntered;
     String firstNumberEntered; //stores numberEntered when doing operations
-    String operation; //keep track of what operation is being performed using the view's tag
-    String buttonsDisplayed; //keep track of what buttons are displayed using the view's tag
+    String operation; //keeps track of what operation is being performed using the view's tag
+    String buttonsSelected; //keeps track of what buttons are displayed using the view's tag
 
     //keeping track of operations and number system
     boolean calculation; //set to true when an operation button is pressed
     boolean readyToCalculate; //set to true when second number has been entered
-    boolean calculationDone; //set to true when calculation was completed
-    boolean romanButtonsOn; //keep track of which buttons are on
-    boolean operationSelected; //set to true when chaining operations
-    boolean decimalDisplay; //keep track of whether display is roman or decimal
+    boolean calculationDone; //set to true when calculation is successful
+    boolean romanButtonsOn; //keeps track of which buttons are visible
+    boolean operationSelected; //used for chaining operations
+    boolean decimalDisplay; //keeps track of whether display is roman or decimal
 
     //display and data storage
     TextView display;
@@ -56,13 +55,25 @@ public class MainActivity extends AppCompatActivity {
         decimalButtonValues = new Hashtable<>();
         romanButtonValues = new Hashtable<>();
 
+        numberEntered = "";
+        firstNumberEntered = "";
+        operation = "";
+        buttonsSelected = "";
+
+        calculation = false;
+        readyToCalculate = false;
+        calculationDone = false;
+        romanButtonsOn = false;
+        operationSelected = false;
+        decimalDisplay = true;
+
         //decimal buttons array
         decimalButtons = new Button[]{decimal0, decimal1, decimal2, decimal3, decimal4,
                             decimal4, decimal5, decimal6, decimal7, decimal8, decimal9};
 
-        //find decimal buttons using ids and add button and value to hashtable
+        //find decimal buttons using ids and add button id and value to hashtable
         for (int i = 0; i < decimalButtons.length; i++) {
-            int id = getResources().getIdentifier("button" + i, "id", getPackageName());
+            int id = getResources().getIdentifier("button"+i,"id", getPackageName());
             decimalButtons[i] = findViewById(id);
             decimalButtonValues.put(id, i);
         }
@@ -71,47 +82,31 @@ public class MainActivity extends AppCompatActivity {
         romanButtons = new Button[]{roman0, roman1, roman2, roman3, roman4, roman5, roman6};
         romanValues = new String[]{"I", "V", "X", "L", "C", "D", "M"};
 
-        //find roman buttons using ids and add button and value to hashtable
+        //find roman buttons using ids and add button id and value to hashtable
         for (int i = 0; i < romanButtons.length; i++) {
-            int id = getResources().getIdentifier("roman" + i, "id", getPackageName());
+            int id = getResources().getIdentifier("roman"+i, "id", getPackageName());
             romanButtons[i] = findViewById(id);
             romanButtonValues.put(id, romanValues[i]);
         }
-
-        //initializations
-        numberEntered = "";
-        firstNumberEntered = "";
-        operation = "";
-        buttonsDisplayed = "";
-
-        calculation = false;
-        readyToCalculate = false;
-        calculationDone = false;
-        romanButtonsOn = false;
-        operationSelected = false;
-        decimalDisplay = true;
     }
 
     /**
-     * Event handling for all decimal buttons
+     * Event handling for all decimal number buttons
      * @param view the decimal button that was pressed
      */
     public void numberButtonClick(View view) {
         buttonAnimation(view);
 
         if (!romanButtonsOn) {
-            //prepare for decimal use
+            //prepare display for decimal use
             if (!decimalDisplay) {
                 numberEntered = "";
                 display.setText("");
                 decimalDisplay = true;
             }
 
-            //prepare for decimal numbers to be entered
-            checkTypingConditions();
-            //button that was pressed
-            Button curButton = (Button) view;
-            //get value of curButton that was pressed from hashtable
+            checkTypingConditions(); //prepare for decimal buttons to be entered
+            Button curButton = (Button) view; //button that was pressed
             int curValue = decimalButtonValues.get(curButton.getId());
             numberEntered += String.valueOf(curValue);
 
@@ -129,25 +124,21 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Event handling for all roman numeral buttons
-     * @param view the roman rnumeral button that was pressed
+     * @param view the roman numeral button that was pressed
      */
     public void romanButtonClick(View view) {
         buttonAnimation(view);
 
         if (romanButtonsOn) {
-            //prepare for roman use
+            //prepare display for roman use
             if (decimalDisplay) {
                 numberEntered = "";
                 display.setText("");
                 decimalDisplay = false;
             }
 
-            //prepare for roman numerals to be entered
-            checkTypingConditions();
-
-            //button that was pressed
-            Button curButton = (Button) view;
-            //get value of curButton from hashtable
+            checkTypingConditions(); //prepare for roman numerals to be entered
+            Button curButton = (Button) view; //button that was pressed
             String curValue = romanButtonValues.get(curButton.getId());
             numberEntered += curValue;
 
@@ -159,14 +150,14 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            //disable or enable any buttons that need to be disabled or enabled
-            romanRules();
+            romanRules(); //disable/enable any buttons that need to be disabled/enabled
             display.append(curValue);
         }
     }
 
     /**
-     * Backspace functionality
+     * Backspace functionality; last number is removed
+     * from display when this method is called
      * @param view the backspace button
      */
     public void deleteClick(View view) {
@@ -175,26 +166,23 @@ public class MainActivity extends AppCompatActivity {
         if (display.length() > 0) {
             numberEntered = numberEntered.substring(0, numberEntered.length() - 1);
             display.setText(numberEntered);
-            //enable all buttons
-            enableRomanButtons();
-            //apply roman numeral rules to the new number
-            romanRules();
+            enableRomanButtons(); //enable all buttons
+            romanRules(); //apply roman numeral rules to the new number
         }
     }
 
     /**
      * Arithmetic functionality and keeping track of
-     * which operation is underway using the tag
+     * which operation is in progress using the tag
      * attribute of the view
      * @param view the operation button that was pressed
      */
     public void operationClick(View view) {
         buttonAnimation(view);
-        String message = "";
 
         if (numberEntered.length() > 0) {
-            message =  "Convert back to do operations";
-            //operations only allowed when display type matches buttons ie not converted
+            String message =  "Convert back to do operations";
+            //operations only allowed when display type matches buttons ie not during conversion
             if (decimalDisplay != romanButtonsOn) {
                 if (!calculation && !readyToCalculate ||calculationDone) {//one operation at a time
                     operation = (String) view.getTag(); //"add", "subtract", "multiply" or "divide"
@@ -206,9 +194,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                     enableRomanButtons(); //enable all buttons for second number to be entered
                     return;
-                } else {
-                    message = "One operation at a time";
                 }
+                message = "One operation at a time";
             }
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
         }
@@ -230,19 +217,12 @@ public class MainActivity extends AppCompatActivity {
             if (romanButtonsOn) {
                 firstNumber = Roman.convertToInt(firstNumberEntered);
                 secondNumber = Roman.convertToInt(numberEntered);
-                if (firstNumber == 0 || secondNumber == 0) {
-                    String message = "Invalid Roman numeral entered";
-                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                    resetValues();
-                    return;
-                }
             } else {
                 firstNumber = Integer.parseInt(firstNumberEntered);
                 secondNumber = Integer.parseInt(numberEntered);
             }
 
-            //find out what operation user selected and perform it
-            if (operation.equals("add")) {
+            if (operation.equals("add")) { //find out what operation user selected and perform it
                 answer = firstNumber + secondNumber;
             } else if (operation.equals("subtract")) {
                 answer = firstNumber - secondNumber;
@@ -266,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
                 numberEntered = String.valueOf(answer);
             }
 
-            //update display, set strings & booleans & enable buttons after successful calculation
+            //update display, set strings & booleans, & enable buttons after successful calculation
             answerDisplay.setText(numberEntered);
             display.setText("");
             readyToCalculate = false;
@@ -283,21 +263,14 @@ public class MainActivity extends AppCompatActivity {
      */
     public void convertValueClick(View view) {
         buttonAnimation(view);
-        //conversion not allowed during a calculation
-        if (!calculation || !readyToCalculate) {
+
+        if (!calculation || !readyToCalculate) { //conversion not allowed during a calculation
             if (numberEntered.length() > 0) {
                 if (decimalDisplay) {
-                    int value = Integer.parseInt(numberEntered);
-                    numberEntered = Roman.convertToString(value);
+                    numberEntered = Roman.convertToString(Integer.parseInt(numberEntered));
                     display.setText(numberEntered);
                     decimalDisplay = false;
                 } else {
-                    if (String.valueOf(Roman.convertToInt(numberEntered)).equals("0")) {
-                        String message = "Invalid Roman numeral entered";
-                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
                     numberEntered = String.valueOf(Roman.convertToInt(numberEntered));
                     display.setText(numberEntered);
                     decimalDisplay = true;
@@ -308,29 +281,27 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Change buttons from decimal to roman and vice versa
-     * @param view either the "DEC button or the "ROM" button
+     * @param view either the "DEC" button or the "ROM" button
      */
     public void changeButtonsClick(View view) {
         buttonAnimation(view);
-        answerDisplay.setText("");
-        buttonsDisplayed = (String) view.getTag();
+        buttonsSelected = (String) view.getTag(); //"roman" or "decimal"
 
-        //check if buttons need to be changed
-        if (buttonsDisplayed.equals("roman") && !romanButtonsOn) {
+        if (buttonsSelected.equals("roman") && !romanButtonsOn) {
             toggleButtons(romanButtons, decimalButtons);
             romanButtonsOn = true;
             decimalDisplay = false;
-        } else if (buttonsDisplayed.equals("decimal") && romanButtonsOn) {
+        } else if (buttonsSelected.equals("decimal") && romanButtonsOn) {
             toggleButtons(decimalButtons, romanButtons);
             romanButtonsOn = false;
             decimalDisplay = true;
         }
-        //reset all values to initial state when changing buttons
         resetValues();
     }
 
     /**
-     * Clear displays and reset values
+     * Clear displays, reset values and enable
+     * all roman buttons if need be
      * @param view the clear button, labelled "C"
      */
     public void clearClick(View view) {
@@ -348,17 +319,17 @@ public class MainActivity extends AppCompatActivity {
      */
     public void switchActivityClick(View view) {
         buttonAnimation(view);
-        Intent intent = new Intent(MainActivity.this, RomanDefinitionsActivity.class);
+        Intent intent = new Intent(MainActivity.this,RomanDefinitionsActivity.class);
         startActivity(intent);
     }
 
     /**
      * Perform an animation on a button and send
-     * haptic feedback to the user
-     * @param view the button to which the animation will be applied
+     * haptic feedback to the user. Applied to all buttons
+     * @param view the button view on which the animation is be applied
      */
     public void buttonAnimation(View view) {
-        //make button smaller than full size again
+        //make button smaller, then full size again
         float pivotX = (float) view.getWidth() / 2;
         float pivotY = (float) view.getHeight() / 2;
         ScaleAnimation animation =
@@ -371,11 +342,11 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Toggle button visibility when changing
      * from decimal to roman buttons or vice versa
-     * @param on array of buttons that will be made visible
-     * @param off array of buttons that will be made invisible
+     * @param on array of buttons to be made visible
+     * @param off array of buttons to be made invisible
      */
     public void toggleButtons (Button[] on, Button[] off) {
-        //loop through button array and toggle visibility
+        //loop through button arrays and toggle visibility. 2 loops due to different array lengths
         for (int i = 0; i < off.length; i++) {
             if (off[i] != null) {
                 off[i].setVisibility(View.INVISIBLE);
@@ -391,7 +362,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Enforce roman numeral writing conventions
      * and enable and disable buttons as the user
-     * enters roman numerals
+     * presses roman numeral buttons
      */
     public void romanRules() {
         if (numberEntered.length() < 1) {
@@ -400,13 +371,14 @@ public class MainActivity extends AppCompatActivity {
 
         String curChar = numberEntered.substring(numberEntered.length() - 1);
         int curCharIndex = 0;
-        int startIndex = -1; //keep track of how many buttons to disable
+        int startIndex = -1; //keep track of buttons to disable
 
         Button curButton = null;
-        for (int i = 0; i < romanValues.length; i++) {
+        for (int i = 0; i < romanValues.length; i++) { //find button pressed and its index in array
             if (romanValues[i].equals(curChar)) {
                 curButton = romanButtons[i];
                 curCharIndex = i;
+                break;
             }
         }
 
@@ -432,19 +404,16 @@ public class MainActivity extends AppCompatActivity {
                 if (romanValues[i].equals(secondLastChar)) {
                     secondCharIndex = i;
                     if (secondCharIndex < curCharIndex) { //if a subtraction is taking place
-                        //buttons will be disabled starting from the smaller numeral
-                        startIndex = secondCharIndex;
+                        startIndex = secondCharIndex; //larger numerals will be disabled
                     }
+                    break;
                 }
             }
 
-            //if numerals are repeated
-            if (secondLastChar.equals(curChar)) {
-                //disable larger numerals since you can't subtract twice
-                startIndex = curCharIndex + 1;
+            if (secondLastChar.equals(curChar)) { //if numerals are repeated
+                startIndex = curCharIndex + 1; //prevent double subtraction
             }
-
-            //limit all numerals except "M" to three occurrences
+            //3 occurrence limit for all numerals except "M"
             if (numberEntered.length() >= 3 && !curChar.equals("M")) {
                 String thirdLastChar =
                         numberEntered.substring(numberEntered.length()-3, numberEntered.length()-2);
@@ -454,9 +423,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        //if buttons need to be disabled
-        if (startIndex > -1) {
-            //loop through array of buttons and disable buttons as required
+
+        if (startIndex != -1) { //if buttons need to be disabled
+            //disable buttons starting from startIndex
             for (int i = startIndex; i < romanButtons.length; i++) {
                 romanButtons[i].setClickable(false);
                 romanButtons[i].setAlpha(0.5f);
@@ -481,35 +450,32 @@ public class MainActivity extends AppCompatActivity {
      * have been met and set booleans accordingly
      */
     public void checkTypingConditions() {
-        //if an operation button was pressed
-        if (calculation) {
+        if (calculation) {//if an operation button was pressed
             display.setText(""); //clear display
-            firstNumberEntered = numberEntered; //save first number
-            numberEntered = ""; //clear first number to hold second number
+            firstNumberEntered = numberEntered; //save original number
+            numberEntered = ""; //clear original number to hold second number
             calculation = false;
             readyToCalculate = true; //equals button can now be pressed
         }
 
-        //if calculation was completed
-        if (calculationDone) {
-            //operate directly on the answer
-            if (!operationSelected) {
+        if (calculationDone) { //if calculation was completed
+            if (!operationSelected) { //chain operations together
                 firstNumberEntered = numberEntered;
             }
-            //clear if user decides to enter new numbers
+
             numberEntered = "";
             display.setText("");
             calculationDone = false;
         }
 
-        //clear answer display after a calculation
-        if (operation.equals("")) {
+        if (operation.equals("")) { //clear answer display after a calculation
             answerDisplay.setText("");
         }
     }
 
     /**
-     * Reset all values to initial state
+     * Reset values to initial states
+     * and enable roman numeral buttons
      */
     public void resetValues() {
         display.setText("");
