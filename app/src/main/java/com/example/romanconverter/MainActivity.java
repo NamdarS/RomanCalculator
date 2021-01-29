@@ -13,7 +13,7 @@ import android.widget.Toast;
 import java.util.Hashtable;
 
 public class MainActivity extends AppCompatActivity {
-    //decimal buttons and arrays
+    //decimal buttons and array
     Button decimal0, decimal1, decimal2, decimal3, decimal4,
            decimal5, decimal6, decimal7, decimal8, decimal9;
     Button[] decimalButtons;
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     String numberEntered;
     String firstNumberEntered; //stores numberEntered when doing operations
     String operation; //keeps track of what operation is being performed using the view's tag
-    String buttonsSelected; //keeps track of what buttons are displayed using the view's tag
+    String buttonsSelected; //keeps track of what buttons are selected using the view's tag
 
     //keeping track of operations and number system
     boolean calculation; //set to true when an operation button is pressed
@@ -221,8 +221,8 @@ public class MainActivity extends AppCompatActivity {
                 firstNumber = Integer.parseInt(firstNumberEntered);
                 secondNumber = Integer.parseInt(numberEntered);
             }
-
-            if (operation.equals("add")) { //find out what operation user selected and perform it
+            //find out what operation user selected and perform it
+            if (operation.equals("add")) {
                 answer = firstNumber + secondNumber;
             } else if (operation.equals("subtract")) {
                 answer = firstNumber - secondNumber;
@@ -346,7 +346,7 @@ public class MainActivity extends AppCompatActivity {
      * @param off array of buttons to be made invisible
      */
     public void toggleButtons (Button[] on, Button[] off) {
-        //loop through button arrays and toggle visibility. 2 loops due to different array lengths
+        //loop through arrays and toggle visibility. 2 loops needed due to different array lengths
         for (int i = 0; i < off.length; i++) {
             if (off[i] != null) {
                 off[i].setVisibility(View.INVISIBLE);
@@ -462,7 +462,6 @@ public class MainActivity extends AppCompatActivity {
             if (!operationSelected) { //chain operations together
                 firstNumberEntered = numberEntered;
             }
-
             numberEntered = "";
             display.setText("");
             calculationDone = false;
@@ -476,6 +475,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Reset values to initial states
      * and enable roman numeral buttons
+     * if need be
      */
     public void resetValues() {
         display.setText("");
@@ -487,7 +487,9 @@ public class MainActivity extends AppCompatActivity {
         readyToCalculate = false;
         calculationDone = false;
         operationSelected = false;
-        enableRomanButtons();
+        if (romanButtonsOn) {
+            enableRomanButtons();
+        }
     }
 
     /**
